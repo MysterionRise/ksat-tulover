@@ -23,15 +23,13 @@ data class Failed(val e: MoneyTransferException) : Result()
 object MoneyTransferServer {
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun moneyTransferApp(
-    ): RoutingHttpHandler {
+    fun moneyTransferApp(): RoutingHttpHandler {
         return routes(
             foo()
         )
     }
 
-    private fun foo(
-    ): RoutingHttpHandler {
+    private fun foo(): RoutingHttpHandler {
         return "foo" bind Method.GET to { req: Request ->
             val reqLens = Body.auto<GetFoo>().toLens()
             val respLens = Body.auto<Succeeded<String>>().toLens()

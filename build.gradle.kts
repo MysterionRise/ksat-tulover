@@ -57,6 +57,7 @@ val mapDBVersion: String by project
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.3.1")
 
     implementation("org.http4k", "http4k-core", http4kversion)
     implementation("org.http4k", "http4k-server-netty", http4kversion)
@@ -68,7 +69,7 @@ dependencies {
     implementation("ch.qos.logback", "logback-classic", logbackVersion)
 
     implementation("org.mapdb", "mapdb", mapDBVersion)
-    
+
     testImplementation(kotlin("test-junit"))
     testImplementation("org.junit.jupiter", "junit-jupiter-api", junit5Version)
     testImplementation("org.junit.jupiter", "junit-jupiter-params", junit5Version)
