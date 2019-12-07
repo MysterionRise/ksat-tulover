@@ -1,9 +1,3 @@
-## Money Transfer Server
+## Solr benchmark for different DC/AZ scenarios
 
 ### How to run:
-```
-./gradlew clean build
-java -jar build/libs/money-transfer-server.jar
-```
-
-If application won't start check already running applications on port 9999
