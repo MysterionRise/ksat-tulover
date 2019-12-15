@@ -2,4 +2,6 @@
 
 Data for indexing taken from - https://dumps.wikimedia.org/enwiki/latest/
 
-### How to run:
+### Queries example
+
+http://localhost:8983/solr/gettingstarted/select?defType=dismax&q=anarchism&qf=title%20url%20abstract
