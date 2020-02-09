@@ -1,7 +1,13 @@
+extern crate image;
 extern crate num;
 
+use std::fs::File;
+use std::io::Write;
 use std::str::FromStr;
+use std::time::Instant;
 
+use image::{ColorType, ImageResult};
+use image::png::PNGEncoder;
 use num::Complex;
 
 fn complex_square_add_loop(c: Complex<f64>, limit: u32) -> Option<u32> {
@@ -47,5 +53,90 @@ fn test_parse_complex() {
     assert_eq!(parse_complex("1.25,-0.0625"), Some(Complex { re: 1.25, im: -0.0625 }));
 }
 
+fn pixel_to_point(bounds: (usize, usize),
+                  pixel: (usize, usize),
+                  upper_left: Complex<f64>,
+                  lower_right: Complex<f64>,
+) -> Complex<f64> {
+    let (width, height) = (lower_right.re - upper_left.re, upper_left.im - lower_right.im);
+    Complex {
+        re: upper_left.re + pixel.0 as f64 * width / bounds.0 as f64,
+        im: upper_left.im - pixel.1 as f64 * height / bounds.1 as f64,
+    }
+}
 
-fn main() {}
+#[test]
+fn test_pixel_to_point() {
+    assert_eq!(pixel_to_point((100, 100), (25, 75),
+                              Complex { re: -1.0, im: 1.0 },
+                              Complex { re: 1.0, im: -1.0 }),
+               Complex { re: -0.5, im: -0.5 });
+}
+
+
+fn render(pixels: &mut [u8],
+          bounds: (usize, usize),
+          upper_left: Complex<f64>,
+          lower_right: Complex<f64>,
+          limit: u32)
+{
+    assert_eq!(pixels.len(), bounds.0 * bounds.1);
+
+    for row in 0..bounds.1 {
+        for column in 0..bounds.0 {
+            let point = pixel_to_point(bounds, (column, row),
+                                       upper_left, lower_right);
+            pixels[row * bounds.0 + column] =
+                match complex_square_add_loop(point, limit) {
+                    None => 0,
+                    Some(count) => 255 - count as u8
+                };
+        }
+    }
+}
+
+fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize))
+               -> ImageResult<()>
+{
+    let output = File::create(filename)?;
+
+    let encoder = PNGEncoder::new(output);
+    return encoder.encode(&pixels,
+                          bounds.0 as u32, bounds.1 as u32,
+                          ColorType::L8);
+}
+
+fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    if args.len() != 6 {
+        writeln!(std::io::stderr(),
+                 "Usage: mandelbrot FILE LIMIT PIXELS UPPERLEFT LOWERRIGHT")
+            .unwrap();
+        writeln!(std::io::stderr(),
+                 "Example: {} mandel.png 300 1600x1200 -1.20,0.35 -1,0.20",
+                 args[0])
+            .unwrap();
+        std::process::exit(1);
+    }
+
+    let now = Instant::now();
+
+    let limit = args[2].parse::<u32>().unwrap();
+
+    let bounds = parse_pair(&args[3], 'x')
+        .expect("error parsing image dimensions");
+    let upper_left = parse_complex(&args[4])
+        .expect("error parsing upper left corner point");
+    let lower_right = parse_complex(&args[5])
+        .expect("error parsing lower right corner point");
+
+    let mut pixels = vec![0; bounds.0 * bounds.1];
+
+    render(&mut pixels, bounds, upper_left, lower_right, limit);
+
+    write_image(&args[1], &pixels, bounds)
+        .expect("error writing PNG file");
+
+    println!("Execution time: {} seconds", now.elapsed().as_secs());
+}
