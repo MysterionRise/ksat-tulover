@@ -22,9 +22,16 @@ Check http://0.0.0.0:3000 to see the results
 
 ##### mandelbrot
 
+For normal testing
 ```
 cd programming-rust-fast-systems-development/ch2/mandelbrot
-cargo run
+cargo run mandel.png 300 1600x1200 -1.20,0.35 -1,0.20
+```
+For maximum performance (at least 20 times faster)
+```
+cd programming-rust-fast-systems-development/ch2/mandelbrot
+cargo build --release
+./target/release/mandelbrot mandel.png 300 1600x1200 -1.20,0.35 -1,0.20
 ```
 
 
