@@ -27,17 +27,6 @@ cd programming-rust-fast-systems-development/ch2/mandelbrot
 cargo run
 ```
 
-### Legacy examples
-
-1. Mandelbrot set generation and image writing in a concurrent way
-```
-cd legacy-examples/mandelbrot
-cargo build
-./target/debug/mandelbrot mandel.png 300 1600x1200 -1.20,0.35 -1.0,0.20
-```
-
-<img src="/legacy-examples/docs/mandelbrot/mandel.png?raw=true" width=100% height=100%/>
-
 
 Books:
 
