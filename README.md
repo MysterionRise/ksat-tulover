@@ -12,7 +12,20 @@ cargo test
 cargo run 799459 28823 27347
 ```
 
-##### g
+##### actix-gcd
+
+```
+cd programming-rust-fast-systems-development/ch2/actix-gcd
+cargo run
+```
+Check http://0.0.0.0:3000 to see the results
+
+##### mandelbrot
+
+```
+cd programming-rust-fast-systems-development/ch2/mandelbrot
+cargo run
+```
 
 ### Legacy examples
 
