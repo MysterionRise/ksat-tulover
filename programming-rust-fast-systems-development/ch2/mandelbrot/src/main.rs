@@ -4,7 +4,7 @@ use std::str::FromStr;
 use std::time::Instant;
 
 use image::codecs::png::PngEncoder;
-use image::{ColorType, ImageResult};
+use image::{ColorType, ImageResult, ImageEncoder};
 use num::Complex;
 
 fn complex_square_add_loop(c: Complex<f64>, limit: u32) -> Option<u32> {
@@ -106,7 +106,7 @@ fn write_image(filename: &str, pixels: &[u8], bounds: (usize, usize)) -> ImageRe
     let output = File::create(filename)?;
 
     let encoder = PngEncoder::new(output);
-    return encoder.encode(&pixels, bounds.0 as u32, bounds.1 as u32, ColorType::L8);
+    return encoder.write_image(&pixels, bounds.0 as u32, bounds.1 as u32, ColorType::L8);
 }
 
 fn main() {
