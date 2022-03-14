@@ -34,6 +34,13 @@ cargo build --release
 ./target/release/mandelbrot mandel.png 300 1600x1200 -1.20,0.35 -1,0.20
 ```
 
+##### quickreplace
+
+```
+cd programming-rust-fast-systems-development/ch2/quickreplace
+cargo run 1 2 Cargo.toml Copy.toml
+```
+It will replace all 1s with 2s in `Cargo.toml` file and store it to `Copy.toml`
 
 Books:
 
