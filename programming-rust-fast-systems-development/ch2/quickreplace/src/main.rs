@@ -39,13 +39,13 @@ fn print_usage() {
 
 
 fn main() {
-    let ERROR: ColoredString = "Error:".red().bold();
+    let error: ColoredString = "Error:".red().bold();
     let args = parse_arguments();
 
     let data = match fs::read_to_string(&args.filename) {
         Ok(v) => v,
         Err(e) => {
-            eprintln!("{} failed to read from file '{}': {:?}", ERROR, args.filename.red(), e);
+            eprintln!("{} failed to read from file '{}': {:?}", error, args.filename.red(), e);
             std::process::exit(1);
         }
     };
@@ -53,15 +53,15 @@ fn main() {
     let replaced_data = match replace(&args.target, &args.replacement, &data) {
         Ok(v) => v,
         Err(e) => {
-            eprintln!("{} failed to replace text {:?}", ERROR, e);
+            eprintln!("{} failed to replace text {:?}", error, e);
             std::process::exit(1);
         }
     };
 
-    match fs::write(&args.output, &data) {
+    match fs::write(&args.output, &replaced_data) {
         Ok(_) => {}
         Err(e) => {
-            eprintln!("{} failed to write to file '{}': {:?}", ERROR, args.output.red(), e);
+            eprintln!("{} failed to write to file '{}': {:?}", error, args.output.red(), e);
             std::process::exit(1);
         }
     }
